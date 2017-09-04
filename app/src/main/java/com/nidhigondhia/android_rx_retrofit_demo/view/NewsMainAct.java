@@ -3,6 +3,7 @@ package com.nidhigondhia.android_rx_retrofit_demo.view;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -32,6 +33,9 @@ public class NewsMainAct extends AppCompatActivity implements INewsMainAct {
     ProgressBar progressBar;
 
     NewsAdapter newsAdapter;
+
+    private DividerItemDecoration dividerItemDecoration;
+    private LinearLayoutManager mLayoutManager;
 
     private NetworkService service;
     private NetworkPresenterInteractor presenter;
@@ -68,9 +72,17 @@ public class NewsMainAct extends AppCompatActivity implements INewsMainAct {
 
     @Override
     public void configureRecyclerView() {
-        recyclerViewNewList.setLayoutManager(new LinearLayoutManager(this));
+
+        // setting linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        recyclerViewNewList.setLayoutManager(mLayoutManager);
         recyclerViewNewList.setItemAnimator(new DefaultItemAnimator());
 
+        // setting divider decoration
+        dividerItemDecoration = new DividerItemDecoration(recyclerViewNewList.getContext(), mLayoutManager.getOrientation());
+        recyclerViewNewList.addItemDecoration(dividerItemDecoration);
+
+        // intializing adapter, and set adapter to recycler view
         newsAdapter = new NewsAdapter();
         recyclerViewNewList.setAdapter(newsAdapter);
     }
@@ -79,13 +91,17 @@ public class NewsMainAct extends AppCompatActivity implements INewsMainAct {
     @Override
     public void successNewsIDAPICall(ArrayList<Integer> response) {
 
+        // hide progress bar on response
         hideProgressView(true);
+
+        // set response items to adapter and refresh adapter
         newsAdapter.setItems(response);
         newsAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void failureNewsIDAPICall(Throwable throwable) {
+        // hide progress bar on response
         hideProgressView(true);
         Logger.printLogE("failureNewsIDAPICall >> failureNewsIDAPICall >> " + throwable);
     }
