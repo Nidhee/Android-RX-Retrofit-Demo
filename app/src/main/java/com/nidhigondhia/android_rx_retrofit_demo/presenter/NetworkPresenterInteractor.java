@@ -8,4 +8,5 @@ public interface NetworkPresenterInteractor {
 
     void getTopStoriesNewsID();
     void rxUnSubscribeTopStoriesNewsID();
+
 }

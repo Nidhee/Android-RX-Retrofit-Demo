@@ -63,6 +63,13 @@ public class NewsMainAct extends AppCompatActivity implements INewsMainAct {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+        presenter.rxUnSubscribeTopStoriesNewsID();
+    }
+
+    @Override
     public void hideProgressView(boolean hide){
         if(hide)
             progressBar.setVisibility(View.GONE);
