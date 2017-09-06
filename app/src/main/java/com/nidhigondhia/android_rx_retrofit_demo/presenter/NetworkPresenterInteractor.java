@@ -9,4 +9,6 @@ public interface NetworkPresenterInteractor {
     void getTopStoriesNewsID();
     void rxUnSubscribeTopStoriesNewsID();
 
+
+    void getNewsDetail(Long newsID);
 }

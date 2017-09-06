@@ -1,5 +1,7 @@
 package com.nidhigondhia.android_rx_retrofit_demo.view;
 
+import com.nidhigondhia.android_rx_retrofit_demo.models.News;
+
 import java.util.ArrayList;
 
 /**
@@ -24,11 +26,23 @@ interface INewsMainAct {
      * Success Response callback for News ID initial API call
      * @param response response arraylist
      */
-    void successNewsIDAPICall(ArrayList<Integer> response);
+    void successNewsIDAPICall(ArrayList<Long> response);
 
     /**
      * Success Response callback for News ID initial API call
      * @param throwable error throwable
      */
     void failureNewsIDAPICall(Throwable throwable);
+
+    /**
+     * Success Response callback for News ID initial API call
+     * @param response response arraylist
+     */
+    void successNewsDetailAPICall(News response);
+
+    /**
+     * Success Response callback for News ID initial API call
+     * @param throwable error throwable
+     */
+    void failureNewsDetailAPICall(Throwable throwable);
 }

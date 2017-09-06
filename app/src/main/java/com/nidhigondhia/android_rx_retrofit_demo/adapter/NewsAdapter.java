@@ -7,12 +7,16 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.nidhigondhia.android_rx_retrofit_demo.R;
+import com.nidhigondhia.android_rx_retrofit_demo.models.News;
+import com.nidhigondhia.android_rx_retrofit_demo.presenter.NetworkPresenterInteractor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,20 +28,29 @@ import butterknife.ButterKnife;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyNewsViewHolder> {
 
-    private List<Integer> newsIDArrayList = new ArrayList<>();
+    private List<Long> newsIDArrayList = new ArrayList<>();
+    private HashMap<Long,News> newsHashMap = new HashMap<>();
+
+    private NetworkPresenterInteractor presenter;
 
     public class MyNewsViewHolder extends RecyclerView.ViewHolder {
+
         @BindView(R.id.tv_news_item_title)
         TextView tvTitle;
+
+        @BindView(R.id.pb_news_item)
+        ProgressBar pbItem;
 
         public MyNewsViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
     }
-    public NewsAdapter(){}
+    public NewsAdapter(NetworkPresenterInteractor presenterInteractor){
+        presenter = presenterInteractor;
+    }
 
-    public void setItems(final ArrayList<Integer> list) {
+    public void setItems(final ArrayList<Long> list) {
         this.newsIDArrayList = list;
     }
     @Override
@@ -48,9 +61,29 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyNewsViewHold
 
     @Override
     public void onBindViewHolder(MyNewsViewHolder holder, int position) {
-        holder.tvTitle.setText(String.valueOf(newsIDArrayList.get(position)));
+
+        if(newsHashMap!=null && newsHashMap.containsKey(newsIDArrayList.get(position))) {
+
+            holder.pbItem.setVisibility(View.INVISIBLE);
+            holder.tvTitle.setText(newsHashMap.get(newsIDArrayList.get(position)).getTitle());
+
+        }else {
+
+            holder.tvTitle.setText("");
+            holder.pbItem.setVisibility(View.VISIBLE);
+            presenter.getNewsDetail(newsIDArrayList.get(position));
+        }
     }
 
+    public void updateNewsHashMap(News response,Long id){
+
+        newsHashMap.put(id,response);
+
+        int pos = newsIDArrayList.indexOf(id);
+        notifyItemChanged(pos);
+
+
+    }
     @Override
     public int getItemCount() {
         return newsIDArrayList.size();

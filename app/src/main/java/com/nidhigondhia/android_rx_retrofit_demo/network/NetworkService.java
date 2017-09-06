@@ -1,6 +1,8 @@
 package com.nidhigondhia.android_rx_retrofit_demo.network;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.nidhigondhia.android_rx_retrofit_demo.BuildConfig;
 import android.support.v4.util.LruCache;
@@ -57,10 +59,15 @@ public class NetworkService {
 
         okHttpClient = buildClient();
         apiObservables = new LruCache<>(10);
+
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(new NullOnEmptyConverterFactory())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(okHttpClient)
                 .build();
